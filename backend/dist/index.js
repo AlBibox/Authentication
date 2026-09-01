@@ -20,6 +20,9 @@ app.use(cors(corsOption));
 const __dirname = import.meta.dirname;
 //console.log(path.resolve(__dirname, "../.env"));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+console.log(process.env.TEST);
+
 export const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
