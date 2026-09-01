@@ -18,11 +18,17 @@ app.use(bodyParser.json())
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }))
 
-let corsOption = {
-    origin: "*"
-}
+let corsOption= {
+    origin: ['https://authentication-gray-beta.vercel.app', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+
+
 
 app.use(cors(corsOption));
+
 const __dirname = import.meta.dirname;
 
 //console.log(path.resolve(__dirname, "../.env"));
