@@ -4,14 +4,17 @@ import path from "path";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mysql from 'mysql';
-import { register, login } from "./controllers/auth";
+import { register, login } from "./controllers/auth.js";
 const app = express();
 // create application/json parser
 app.use(bodyParser.json());
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }));
 let corsOption = {
-    origin: "*"
+    origin: ['https://authentication-gray-beta.vercel.app', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 };
 app.use(cors(corsOption));
 const __dirname = import.meta.dirname;

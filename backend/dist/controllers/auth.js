@@ -1,5 +1,5 @@
 import {} from 'express';
-import { db } from '../index';
+import { db } from '../index.js';
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
 /*db.connect(err => {

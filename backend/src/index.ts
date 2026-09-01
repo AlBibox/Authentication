@@ -4,7 +4,7 @@ import path from "path";
 import cors from "cors"
 import bodyParser from "body-parser"
 import mysql from 'mysql'
-import { register, login } from "./controllers/auth"
+import { register, login } from "./controllers/auth.js"
 
 
 
