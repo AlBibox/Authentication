@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }));
 let corsOption = {
-    origin: "http://localhost:5173"
+    origin: "*"
 };
 app.use(cors(corsOption));
 const __dirname = import.meta.dirname;

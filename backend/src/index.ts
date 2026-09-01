@@ -19,7 +19,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 let corsOption = {
-    origin: "http://localhost:5173"
+    origin: "*"
 }
 
 app.use(cors(corsOption));
