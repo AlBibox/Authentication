@@ -38,9 +38,7 @@ export function register(req, res) {
         });
     }
 }
-export function login(req, res, next) {
-    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-    next();
+export function login(req, res) {
     const { email, password } = req.body;
     db.query("SELECT * FROM users WHERE email = ?", [email], async (error, results) => {
         if (error) {

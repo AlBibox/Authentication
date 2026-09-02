@@ -44,9 +44,7 @@ export function register (req: Request, res: Response) { {
 }}
     
 
-export function login(req: Request, res: Response, next: any) {
-    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-    next();
+export function login(req: Request, res: Response) {
     const { email, password }: { email: string, password: string } = req.body;
     db.query("SELECT * FROM users WHERE email = ?", [email], async (error, results) => {
         if (error) {
