@@ -13,7 +13,7 @@ export function register(req, res) {
     {
         console.log(req.body);
         const { email, password } = req.body;
-        db().query("SELECT email FROM users WHERE email = ?", [email], async (error, results) => {
+        db.query("SELECT email FROM users WHERE email = ?", [email], async (error, results) => {
             if (error) {
                 console.log(error);
             }
@@ -24,7 +24,7 @@ export function register(req, res) {
                 });
             }
             let hashedPassword = await bcrypt.hash(password, 8);
-            db().query("INSERT INTO users SET ?", { email: email, password: hashedPassword }, (error, results) => {
+            db.query("INSERT INTO users SET ?", { email: email, password: hashedPassword }, (error, results) => {
                 if (error) {
                     console.log(error);
                 }
@@ -40,7 +40,7 @@ export function register(req, res) {
 }
 export function login(req, res) {
     const { email, password } = req.body;
-    db().query("SELECT * FROM users WHERE email = ?", [email], async (error, results) => {
+    db.query("SELECT * FROM users WHERE email = ?", [email], async (error, results) => {
         if (error) {
             console.log(error);
         }
