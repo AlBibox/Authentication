@@ -9,7 +9,7 @@ import {
 } from "./sessions.server";
 
 
-
+const apiUrl = import.meta.env.MODE  === "production" ? import.meta.env.VITE_API_ENDPOINT : "http://localhost:3000"
 
 export const router = createBrowserRouter([
   {
@@ -20,13 +20,13 @@ export const router = createBrowserRouter([
     request.headers.get("Cookie"),
   );
 
-  console.log(session.has("userId"))
+  //console.log(session.has("userId"))
 
   if (session.has("userId")) {
     // Redirect to the home page if they are already signed in.
     console.log("LOGGED IN")
   }
-  console.log("NO")
+  //console.log("NO")
 
     },
     children:
@@ -40,7 +40,7 @@ export const router = createBrowserRouter([
           let formData = await request.formData();
           let email = formData.get("email")
           let password = formData.get("password")
-          let login = await fetch("http://localhost:3000/login", {
+          let login = await fetch(`${apiUrl}/login`, {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: { 'Content-Type': 'application/json' }
@@ -62,7 +62,7 @@ export const router = createBrowserRouter([
           let formData = await request.formData();
           let email = formData.get("email")
           let password = formData.get("password")
-          let register = await fetch("http://localhost:3000/register", {
+          let register = await fetch(`${apiUrl}/register`, {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: { 'Content-Type': 'application/json' }
