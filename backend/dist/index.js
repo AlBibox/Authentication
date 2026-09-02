@@ -45,4 +45,7 @@ app.get("/", (req, res) => {
 });
 app.post("/register", register);
 app.post("/login", login);
-app.listen(3000);
+
+export default app;
+
+
