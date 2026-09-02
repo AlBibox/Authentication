@@ -23,15 +23,15 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 console.log(process.env.TEST);
 
-export const db = mysql.createConnection({
+export function db(){ return mysql.createConnection({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     port: Number(process.env.DATABASE_PORT)
-});
-/*
-db.connect(err => {
+})}
+
+db().connect(err => {
     if (err) {
         console.log(err)
     } else {
@@ -39,7 +39,7 @@ db.connect(err => {
     }
 });
 
-*/
+
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
