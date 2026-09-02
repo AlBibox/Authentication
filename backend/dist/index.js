@@ -20,9 +20,6 @@ app.use(cors(corsOption));
 const __dirname = import.meta.dirname;
 //console.log(path.resolve(__dirname, "../.env"));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
-
-console.log(process.env.TEST);
-
 export const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
@@ -45,7 +42,10 @@ app.get("/", (req, res) => {
 });
 app.post("/register", register);
 app.post("/login", login);
-
+//If development environment, listen on port 3000
+if (process.env.NODE_ENV === 'development') {
+    app.listen(3000, () => {
+        console.log("Server is running on port 3000");
+    });
+}
 export default app;
-
-
