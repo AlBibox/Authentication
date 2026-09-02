@@ -10,13 +10,13 @@ const app = express();
 app.use(bodyParser.json());
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }));
-let corsOption = {
-    origin: ['https://authentication-gray-beta.vercel.app', 'http://localhost:5173'],
+let corsOptions = {
+    origin: ['https://authentication-gray-beta.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
-app.use(cors(corsOption));
+app.use(cors(corsOptions));
 const __dirname = import.meta.dirname;
 //console.log(path.resolve(__dirname, "../.env"));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
@@ -37,15 +37,16 @@ db.connect(err => {
 });
 
 */
-app.get("/", (req, res) => {
-    res.send("Hello World!");
+app.use(express.static(path.join(__dirname, '../build')));
+app.get(["/", "/login", "/register"], (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 app.post("/register", register);
 app.post("/login", login);
 //If development environment, listen on port 3000
-if (process.env.NODE_ENV === 'development') {
-    app.listen(3000, () => {
-        console.log("Server is running on port 3000");
-    });
-}
+//if (process.env.NODE_ENV === 'development') {
+app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+});
+//}
 export default app;
