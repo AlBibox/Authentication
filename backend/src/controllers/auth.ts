@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 
 export function register (req: Request, res: Response) { {
-    console.log(req.body)
+    //console.log(req.body)
     const { email, password }: { email: string, password: string } = req.body;
     db.query("SELECT email FROM users WHERE email = ?", [email], async (error, results) => {
         if (error) {

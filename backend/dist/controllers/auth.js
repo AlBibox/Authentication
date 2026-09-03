@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 });*/
 export function register(req, res) {
     {
-        console.log(req.body);
+        //console.log(req.body)
         const { email, password } = req.body;
         db.query("SELECT email FROM users WHERE email = ?", [email], async (error, results) => {
             if (error) {

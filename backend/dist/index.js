@@ -4,7 +4,7 @@ import path from "path";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mysql from 'mysql';
-import { register, login } from "./controllers/auth.js";
+import * as authController from "./controllers/auth.js";
 const app = express();
 // create application/json parser
 app.use(bodyParser.json());
@@ -41,12 +41,12 @@ app.use(express.static(path.join(__dirname, '../build')));
 app.get(["/", "/login", "/register"], (req, res) => {
     res.sendFile(path.join(__dirname, '../build/index.html'));
 });
-app.post("/register", register);
-app.post("/login", login);
+app.post("/register", authController.register);
+app.post("/login", authController.login);
 //If development environment, listen on port 3000
-//if (process.env.NODE_ENV === 'development') {
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
-});
-//}
+if (process.env.NODE_ENV === 'development') {
+    app.listen(3000, () => {
+        console.log("Server is running on port 3000");
+    });
+}
 export default app;
