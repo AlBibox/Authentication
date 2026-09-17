@@ -21,7 +21,7 @@ app.use(cookieParser())
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }))
 let corsOptions = {
-    origin: ['https://authentication-gray-beta.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+    origin: ['https://authentication-gray-beta.vercel.app', 'http://localhost:5173', 'http://localhost:3000', 'https://authentication-bice-rho.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
