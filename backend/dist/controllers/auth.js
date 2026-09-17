@@ -121,7 +121,7 @@ export async function refresh(req, res) {
     const query = `
   SELECT user_id, verifier_hash 
   FROM refresh_tokens 
-  WHERE selector = ? AND expires_at > NOW() 
+  WHERE selector = ? AND expires_at > ? 
   LIMIT 1
 `;
     // 2. Esegui la query vecchio stile (con callback)
