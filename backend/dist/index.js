@@ -1,13 +1,15 @@
 import express, {} from "express";
-import dotenv from 'dotenv';
 import path from "path";
 import cors from "cors";
 import bodyParser from "body-parser";
-import mysql from 'mysql';
+import cookieParser from 'cookie-parser';
 import * as authController from "./controllers/auth.js";
+import { middlewareAutenticazione } from "./middleware.js";
+const __dirname = import.meta.dirname;
 const app = express();
 // create application/json parser
 app.use(bodyParser.json());
+app.use(cookieParser());
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }));
 let corsOptions = {
@@ -17,16 +19,6 @@ let corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
-const __dirname = import.meta.dirname;
-//console.log(path.resolve(__dirname, "../.env"));
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
-export const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    port: Number(process.env.DATABASE_PORT)
-});
 /*
 db.connect(err => {
     if (err) {
@@ -43,6 +35,9 @@ app.get(["/", "/login", "/register"], (req, res) => {
 });
 app.post("/register", authController.register);
 app.post("/login", authController.login);
+app.post("/refresh", authController.refresh);
+app.get("/me", middlewareAutenticazione, authController.getMe);
+app.post("/logout", authController.logout);
 //If development environment, listen on port 3000
 if (process.env.NODE_ENV === 'development') {
     app.listen(3000, () => {
