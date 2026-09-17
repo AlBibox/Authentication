@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import {
     Dialog,
     DialogPanel,
@@ -10,13 +10,21 @@ import {
     Bars3Icon,
     XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import axios from 'axios';
+
+const apiUrl = import.meta.env.MODE === "production" ? import.meta.env.VITE_API_ENDPOINT : "http://localhost:3000"
 
 
 
-export default function Navbar({ isLogged }: { isLogged: boolean }) {
+export default function Navbar({ email }: { email: string | undefined }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
+    const handleLogout = useCallback(async () => {
+        await axios.post(`${apiUrl}/logout`, {}, { withCredentials: true })
+        navigate("/")
+    }, []);
 
     return (
         <header className="bg-blue-50">
@@ -42,7 +50,7 @@ export default function Navbar({ isLogged }: { isLogged: boolean }) {
                     </button>
                 </div>
                 <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-                    {!isLogged ? <>
+                    {!email ? <>
                         <NavLink to="/" end className="text-sm/6 font-semibold text-gray-900">
                             Home
                         </NavLink>
@@ -53,9 +61,11 @@ export default function Navbar({ isLogged }: { isLogged: boolean }) {
                             Register
                         </NavLink>
                     </> :
-                        <a href="#" className="text-sm/6 font-semibold text-gray-900">
-                            Logout
-                        </a>}
+                        <>
+                            <span className="text-sm/6 text-gray-900">Hello {email}</span>
+                            <button onClick={handleLogout} className="text-sm/6 font-semibold text-gray-900 cursor-pointer">
+                                Logout
+                            </button></>}
 
                 </PopoverGroup>
             </nav>
@@ -83,7 +93,7 @@ export default function Navbar({ isLogged }: { isLogged: boolean }) {
                     <div className="mt-6 flow-root">
                         <div className="-my-6 divide-y divide-gray-500/10">
                             <div className="space-y-2 py-6">
-                                {!isLogged ?
+                                {!email ?
                                     <>
                                         <NavLink
                                             to="/"
@@ -105,12 +115,15 @@ export default function Navbar({ isLogged }: { isLogged: boolean }) {
                                             Register
                                         </NavLink>
                                     </> :
-                                    <a
-                                        href="#"
-                                        className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                                    >
-                                        Log out
-                                    </a>}
+                                    <>
+                                        <span className="text-sm/6 text-gray-900">Hello {email}</span>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 cursor-pointer"
+                                        >
+                                            Log out
+                                        </button></>}
+
 
                             </div>
                         </div>

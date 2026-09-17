@@ -3,30 +3,26 @@ import Home from "./components/Home"
 import Page from "./components/Page";
 import Login from "./components/Login";
 import Register from "./components/Register"
-import {
-  getSession,
-  commitSession,
-} from "./sessions.server";
+import axios from "axios";
+import api from "./api";
 
 
-const apiUrl = import.meta.env.MODE  === "production" ? import.meta.env.VITE_API_ENDPOINT : "http://localhost:3000"
+const apiUrl = import.meta.env.MODE === "production" ? import.meta.env.VITE_API_ENDPOINT : "http://localhost:3000"
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: Page,
-    loader: async ({request}) => {
-        const session = await getSession(
-    request.headers.get("Cookie"),
-  );
-
-  //console.log(session.has("userId"))
-
-  if (session.has("userId")) {
-    // Redirect to the home page if they are already signed in.
-    console.log("LOGGED IN")
-  }
-  //console.log("NO")
+    loader: async () => {
+      //const response = await api.get('/');
+      // return response.data; 
+      try {
+        const response = await api.post(`${apiUrl}/refresh`, {}, { withCredentials: true })
+        if (response?.data?.accessToken) {
+          const userData = await api.get(`${apiUrl}/me`, { headers: { 'Authorization': `Bearer ${response.data.accessToken}` }, withCredentials: true })
+          return userData.data;
+        }
+      } catch (error) { }
 
     },
     children:
@@ -40,13 +36,11 @@ export const router = createBrowserRouter([
           let formData = await request.formData();
           let email = formData.get("email")
           let password = formData.get("password")
-          let login = await fetch(`${apiUrl}/login`, {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-            headers: { 'Content-Type': 'application/json' }
-          })
+          let login = await axios.post(`${apiUrl}/login`, {
+            email, password
+          }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
           if (login.status === 401) {
-            return login.json();
+            return login.data;
           }
           if (login.status === 200) {
             return redirect("/")
@@ -56,42 +50,30 @@ export const router = createBrowserRouter([
         path: "register",
         Component: Register,
         action: async ({ request }) => {
-          const session = await getSession(
-            request.headers.get("Cookie"),
-          );
           let formData = await request.formData();
           let email = formData.get("email")
           let password = formData.get("password")
-          let register = await fetch(`${apiUrl}/register`, {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-            headers: { 'Content-Type': 'application/json' }
-          })
-          let response = await register.json()
-          let userId = response.id
-          
-          if (!userId ) {
-            session.flash("error", "Invalid username/password");
+          try {
+            await axios.post(`${apiUrl}/register`, { email, password },
+              { headers: { 'Content-Type': 'application/json' } })
 
-            // Redirect back to the login page with errors.
-            redirect("/register", {
-              headers: {
-                "Set-Cookie": await commitSession(session),
-              },
-            });
-            return response
+            try {
+              await axios.post(`${apiUrl}/login`, {
+                email, password
+              }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
+              // Login succeeded, send them to the home page.
+              return redirect("/");
+
+            } catch (err) {
+              throw err
+            }
+
+
           }
 
-          session.set("userId", userId);
-
-          // Login succeeded, send them to the home page.
-          return redirect("/", {
-            headers: {
-              "Set-Cookie": await commitSession(session),
-            },
-          });
-
-
+          catch (err) {
+            throw err
+          }
 
         }
       }
