@@ -155,7 +155,7 @@ export async function refresh(req: Request, res: Response) {
     const query = `
   SELECT user_id, verifier_hash 
   FROM refresh_tokens 
-  WHERE selector = ? AND expires_at > ? 
+  WHERE selector = ? AND expires_at > ?
   LIMIT 1
 `;
 
