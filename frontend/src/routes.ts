@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
           let formData = await request.formData();
           let email = formData.get("email")
           let password = formData.get("password")
-          let login = await axios.post(`${apiUrl}/login`, {
+          let login = await api.post(`${apiUrl}/login`, {
             email, password
           }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
           if (login.status === 401) {
@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
               { headers: { 'Content-Type': 'application/json' } })
 
             try {
-              await axios.post(`${apiUrl}/login`, {
+              await api.post(`${apiUrl}/login`, {
                 email, password
               }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
               // Login succeeded, send them to the home page.
